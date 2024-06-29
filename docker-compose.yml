@@ -1,0 +1,83 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql/mysql-server:8.0
+    ports:
+      - "3309:3306"
+    environment: 
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: laravel
+    entrypoint: ["mysql"]
+    volumes:
+      - mysql_database:/var/lib/mysql
+    
+    networks:
+      - laravel
+
+  nginx:
+    image: "nginx:stable-alpine"
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./src:/var/www/laravel
+    depends_on:
+      - mysql
+      - php
+    
+    networks:
+      - laravel
+  
+  php:
+    build: 
+      context: dockerfiles
+      dockerfile: php.Dockerfile
+    volumes:
+      - ./src:/var/www/laravel
+    
+    networks:
+      - laravel
+  
+  composer:
+    build:
+      context: dockerfiles
+      dockerfile: composer.Dockerfile
+    volumes:
+      - ./src:/var/www/laravel
+    
+    entrypoint: ["composer"]
+
+    networks:
+      - laravel
+
+  artisan:
+    build:
+      context: dockerfiles
+      dockerfile: php.Dockerfile
+    volumes:
+      - ./src:/var/www/laravel
+    
+    entrypoint: ["php", "/var/www/laravel/artisan"]
+
+    networks:
+      - laravel
+  
+  npm:
+    build:
+      context: dockerfiles
+      dockerfile: npm.Dockerfile
+    volumes:
+      - ./src:/var/www/laravel
+    
+    entrypoint: ["npm"]
+
+    networks:
+      - laravel
+
+networks:
+  laravel:
+
+volumes:
+  mysql_database:
