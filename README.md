@@ -26,7 +26,7 @@ ___
 
 ### How to install?
 
-Just clone this rep. and starting "build.bush" file.
+Just clone this rep. and starting "build.bash" file.
 
 Example:
 
