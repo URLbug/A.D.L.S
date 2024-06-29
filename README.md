@@ -43,7 +43,7 @@ ___
 ### How to use command?
 
 You can use command by using "Makefile".
-There are onlie 6 command.
+There are onlie 9 command.
 You can see them by using "make help" command.
 
 To use the commands you need to write "make <name-comand\> o="<options>".
